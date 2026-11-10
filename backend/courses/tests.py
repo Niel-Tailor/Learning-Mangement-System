@@ -8,20 +8,28 @@ from .models import Course, Enrollment
 
 PASSWORD = "test123$"
 
+def make_user(username, role):
+    return User.objects.create_user(
+        username=username,
+        email=f"{username}@example.com",
+        password=PASSWORD,
+        role=role,
+    )
+
 
 class CourseTests(APITestCase):
     def setUp(self):
-        self.teacher = User.objects.create_user(username="teacher1", password=PASSWORD, role="teacher")
-        self.other_teacher = User.objects.create_user(username="teacher2", password=PASSWORD, role="teacher")
-        self.student = User.objects.create_user(username="student1", password=PASSWORD, role="student")
-        self.admin = User.objects.create_superuser("admin", "admin@example.com", PASSWORD)
+        self.teacher = make_user("teacher1", "teacher")
+        self.other_teacher = make_user("teacher2", "teacher")
+        self.student = make_user("student1", "student")
+        self.admin = make_user("admin", "admin")
         self.course = Course.objects.create(title="Python Basics", teacher=self.teacher)
         self.detail_url = reverse("course-detail", args=[self.course.id])
 
     # Viewing
     def test_logged_out_cannot_list_courses(self):
         response = self.client.get(reverse("course-list"))
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED,)
 
     def test_student_can_list_courses(self):
         self.client.force_authenticate(user=self.student)
@@ -33,13 +41,17 @@ class CourseTests(APITestCase):
     # Creating
     def test_teacher_can_create_course_and_becomes_its_teacher(self):
         self.client.force_authenticate(user=self.teacher)
-        response = self.client.post(reverse("course-list"), {"title": "Django"}, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(
+            reverse("course-list"),
+            {"title": "Django", "description": "Intro to Django"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED, response.data)
         self.assertEqual(Course.objects.get(title="Django").teacher, self.teacher)
 
     def test_admin_can_create_course(self):
         self.client.force_authenticate(user=self.admin)
-        response = self.client.post(reverse("course-list"), {"title": "Admin Course"}, format="json")
+        response = self.client.post(reverse("course-list"), {"title": "Admin Course", "description": "Admin course description"}, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_student_cannot_create_course(self):
@@ -96,9 +108,9 @@ class CourseTests(APITestCase):
 
 class EnrollmentTests(APITestCase):
     def setUp(self):
-        teacher = User.objects.create_user(username="teacher1", password=PASSWORD, role="teacher")
-        self.student = User.objects.create_user(username="student1", password=PASSWORD, role="student")
-        other_student = User.objects.create_user(username="student2", password=PASSWORD, role="student")
+        teacher = make_user("teacher1", "teacher")
+        self.student = make_user("student1", "student")
+        other_student = make_user("student2", "student")
         course = Course.objects.create(title="Python Basics", teacher=teacher)
         self.enrollment = Enrollment.objects.create(student=self.student, course=course)
         Enrollment.objects.create(student=other_student, course=course)

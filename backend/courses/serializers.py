@@ -17,9 +17,8 @@ class CourseSerializer(serializers.ModelSerializer):
             "enrollment_count",
             "is_enrolled",
             "created_at",
-            "updated_at",
         )
-        read_only_fields = ("id", "teacher", "created_at", "updated_at")
+        read_only_fields = ("id", "teacher", "created_at")
 
     def get_teacher_name(self, obj):
         return obj.teacher.get_full_name() or obj.teacher.username
