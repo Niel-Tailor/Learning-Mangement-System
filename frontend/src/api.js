@@ -43,7 +43,7 @@ export async function apiRequest(path, { method = "GET", body, auth = true } = {
     headers,
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
-
+  console.log(response.body);
   if (response.status === 204) return null;
 
   const data = await response.json().catch(() => null);

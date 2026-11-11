@@ -56,7 +56,7 @@ class CourseTests(APITestCase):
 
     def test_student_cannot_create_course(self):
         self.client.force_authenticate(user=self.student)
-        response = self.client.post(reverse("course-list"), {"title": "Nope"}, format="json")
+        response = self.client.post(reverse("course-list"), {"title": "Nope", "description": "Description"}, format="json")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     # Editing and deleting
