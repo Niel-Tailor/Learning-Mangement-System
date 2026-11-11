@@ -2,6 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import RequireAuth from "./components/RequireAuth";
 import Layout from "./components/Layout";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 // Temporary placeholders
 function HomePlaceholder() {
@@ -24,8 +26,8 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<HomePlaceholder />} />
-        <Route path="/login" element={<Placeholder title="Log in" />} />
-        <Route path="/register" element={<Placeholder title="Register" />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         <Route element={<RequireAuth />}>
           <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
