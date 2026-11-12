@@ -6,6 +6,9 @@ import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import CoursesPage from "./pages/CoursesPage";
+
+
 
 // Temporary placeholders
 function HomePlaceholder() {
@@ -19,7 +22,6 @@ function HomePlaceholder() {
 }
 
 function Placeholder({ title }) {
-  console.log("Hello");
   return <h1>{title}</h1>;
 }
 
@@ -31,7 +33,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/not-found" element={<NotFoundPage />} />
-        <Route path="/" element={<HomePage />} />
+        <Route path="/courses" element={<CoursesPage />} />
         <Route element={<RequireAuth />}>
           <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
         </Route>
