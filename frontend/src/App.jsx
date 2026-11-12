@@ -4,6 +4,8 @@ import RequireAuth from "./components/RequireAuth";
 import Layout from "./components/Layout";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 // Temporary placeholders
 function HomePlaceholder() {
@@ -28,7 +30,8 @@ export default function App() {
         <Route path="/" element={<HomePlaceholder />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
+        <Route path="/not-found" element={<NotFoundPage />} />
+        <Route path="/" element={<HomePage />} />
         <Route element={<RequireAuth />}>
           <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
         </Route>
@@ -37,7 +40,7 @@ export default function App() {
           <Route path="/users" element={<Placeholder title="Users" />} />
         </Route>
 
-        <Route path="*" element={<Placeholder title="Page not found" />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
