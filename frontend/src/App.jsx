@@ -1,47 +1,40 @@
-import { Route, Routes } from "react-router-dom";
-import { useAuth } from "./AuthContext";
-import RequireAuth from "./components/RequireAuth";
-import Layout from "./components/Layout";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import HomePage from "./pages/HomePage";
-import NotFoundPage from "./pages/NotFoundPage";
-import CoursesPage from "./pages/CoursesPage";
-import CourseDetailPage from "./pages/CourseDetailPage";
-
-
-
-// Temporary placeholders
-function HomePlaceholder() {
-  const { user, loading } = useAuth();
-  if (loading) return <p>Loading...</p>;
-  return (
-    <h1>
-      Home: {user ? `logged in as ${user.username} (${user.role})` : "not logged in"}
-    </h1>
-  );
-}
-
-function Placeholder({ title }) {
-  return <h1>{title}</h1>;
-}
+import { Route, Routes } from 'react-router-dom';
+import Layout from './components/Layout';
+import RequireAuth from './components/RequireAuth';
+import CourseDetailPage from './pages/CourseDetailPage';
+import CourseFormPage from './pages/CourseFormPage';
+import CoursesPage from './pages/CoursesPage';
+import DashboardPage from './pages/DashboardPage';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import MyCoursesPage from './pages/MyCoursesPage';
+import NotFoundPage from './pages/NotFoundPage';
+import RegisterPage from './pages/RegisterPage';
+import UsersPage from './pages/UsersPage';
 
 export default function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route path="/" element={<HomePlaceholder />} />
+        {/* Public pages */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/not-found" element={<NotFoundPage />} />
-        <Route path="/courses" element={<CoursesPage />} />
-        <Route element={<RequireAuth />}>
-          <Route path="/dashboard" element={<Placeholder title="Dashboard" />} />
-        </Route>
 
-        <Route element={<RequireAuth roles={["admin"]} />}>
-          <Route path="/users" element={<Placeholder title="Users" />} />
-        </Route>
+        {/* Any logged-in user */}
+        <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
+        <Route path="/courses" element={<RequireAuth><CoursesPage /></RequireAuth>} />
+        <Route path="/courses/:id" element={<RequireAuth><CourseDetailPage /></RequireAuth>} />
+
+        {/* Teachers and admins */}
+        <Route path="/courses/new" element={<RequireAuth roles={['teacher', 'admin']}><CourseFormPage /></RequireAuth>} />
+        <Route path="/courses/:id/edit" element={<RequireAuth roles={['teacher', 'admin']}><CourseFormPage /></RequireAuth>} />
+
+        {/* Students only */}
+        <Route path="/my-courses" element={<RequireAuth roles={['student']}><MyCoursesPage /></RequireAuth>} />
+
+        {/* Admins only */}
+        <Route path="/users" element={<RequireAuth roles={['admin']}><UsersPage /></RequireAuth>} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Route>
