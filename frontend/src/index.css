@@ -225,3 +225,15 @@ a {
   font: inherit;
   background: var(--surface);
 }
+
+.course-description {
+  white-space: pre-line;
+  max-width: 65ch;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
